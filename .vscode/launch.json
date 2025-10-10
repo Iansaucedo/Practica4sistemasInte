@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "TesterTSP",
+      "request": "launch",
+      "mainClass": "tsp.TesterTSP",
+      "projectName": "2025p4"
+    },
+    {
+      "type": "java",
+      "name": "TesterTSP",
+      "request": "launch",
+      "mainClass": "tsp.TesterTSP",
+      "projectName": "Practica4sistemasInte",
+      "cwd": "${workspaceFolder}",
+      "classPaths": ["${workspaceFolder}/bin"]
+    }
+  ]
+}
