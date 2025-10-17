@@ -12,6 +12,8 @@ import ga.*;
  */
 public class TesterTSP {
 
+	// update
+
 	public static void main(String[] args) {
 		ProblemaTSP prob = new ProblemaTSP("gr17.tsp.txt");
 		// OPERADORES
