@@ -14,20 +14,27 @@ public class TesterTSPcon2Opt {
   public static void main(String[] args) {
     ProblemaTSP prob = new ProblemaTSP("gr17.tsp.txt");
 
-    // OPERADORES
-    // operador para generar cromosomas aleatorios con mejora 2-opt
-    OpGeneracion<Integer> opGen = new OpGenRandNoRepCon2Opt<Integer>(
+    // Instancia compartida de busqueda local 2-opt
+    BusquedaLocal2Opt busqueda2Opt = new BusquedaLocal2Opt(prob);
+
+    // ESTRATEGIA: Aplicar 2-opt solo a ALGUNOS individuos para mantener diversidad
+    // - Generación inicial: 10% de probabilidad (mantener diversidad)
+    // - Después de cruce: NO aplicar (dejar que el GA explore)
+    // - Después de mutación: NO aplicar (dejar que el GA explore)
+    double prob2OptGen = 0.1; // 10% en generación inicial
+    double prob2OptCruce = 0.0; // 0% después de cruce
+    double prob2OptMut = 0.0; // 0% después de mutación
+
+    // OPERADORES CON 2-OPT
+    OpGeneracion<Integer> opGen = new OpGenRandNoRepCon2Opt<>(
         prob.getAlfabeto(),
         prob.getNumCiudades(),
-        new BusquedaLocal2Opt(prob),
-        1.0 // probabilidad de aplicar 2-opt (1.0 = siempre)
-    );
+        busqueda2Opt,
+        prob2OptGen);
 
-    // operador de cruce
-    OpCruce<Integer> opCruce = new OpCruce1PuntoNoRep<Integer>();
-
-    // operador de mutacion
-    OpMutacion<Integer> opMut = new OpMutacionSwap<Integer>();
+    // Usar operadores normales para cruce y mutación
+    OpCruce<Integer> opCruce = new OpCruce1PuntoNoRep<>();
+    OpMutacion<Integer> opMut = new OpMutacionSwap<>();
 
     // operador de seleccion
     OpSeleccion<Integer> opSel = new OpSelRandom<Integer>();

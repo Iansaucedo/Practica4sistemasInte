@@ -138,10 +138,10 @@ public class EstadisticasTSP {
 
     long inicioTiempo = System.currentTimeMillis();
 
-    // OPERADORES CON 2-OPT
+    // OPERADORES CON 2-OPT (prob=0.3 para mantener diversidad)
     BusquedaLocal2Opt busqueda2Opt = new BusquedaLocal2Opt(prob);
     OpGeneracion<Integer> opGen = new OpGenRandNoRepCon2Opt<>(
-        prob.getAlfabeto(), prob.getNumCiudades(), busqueda2Opt, 1.0);
+        prob.getAlfabeto(), prob.getNumCiudades(), busqueda2Opt, 0.3); // CAMBIADO: prob=0.3
     OpCruce<Integer> opCruce = new OpCruce1PuntoNoRep<>();
     OpMutacion<Integer> opMut = new OpMutacionSwap<>();
     OpSeleccion<Integer> opSel = new OpSelRandom<>();
