@@ -16,9 +16,9 @@ public class TesterTSP {
 
 	public static void main(String[] args) {
 		ProblemaTSP prob = new ProblemaTSP("gr17.tsp.txt");
-		
+
 		System.out.println("=== EJECUTANDO GA SIN 2-OPT ===");
-		
+
 		// OPERADORES
 		// operador para generar cromosomas aleatorios
 		OpGeneracion<Integer> opGen = new OpGenRandNoRep<>(prob.getAlfabeto(), prob.getNumCiudades());
@@ -34,7 +34,7 @@ public class TesterTSP {
 		OpDecodificacion<Integer> opDecod = new OpDecodTSP(prob);
 		// operador de reemplazo
 		OpReemplazo<Integer> opReemp = new OpReempGenElitista<>();
-		
+
 		// PARAMETROS
 		int maxIter = 1000; // criterio de parada
 		double pc = 0.9; // prob cruce
@@ -49,23 +49,23 @@ public class TesterTSP {
 		Individuo<Integer> cromoSol = ga.lanzaGA(opGen, maxIter, opCruce, opMut, opSel, opDecod, opReemp);
 		Solucion solucion = opDecod.apply(cromoSol);
 		double costeGA = ((SolucionTSP) solucion).getCoste();
-		
+
 		System.out.println("\n=== SOLUCION ENCONTRADA POR EL GA ===");
 		System.out.println(solucion);
 		System.out.println("Coste GA: " + costeGA);
-		
+
 		// Aplicar 2-opt para comparar
 		System.out.println("\n=== APLICANDO MEJORA LOCAL 2-OPT ===");
 		BusquedaLocal2Opt busqueda2Opt = new BusquedaLocal2Opt(prob);
 		Individuo<Integer> cromoMejorado = busqueda2Opt.mejorar(cromoSol);
 		Solucion solucionMejorada = opDecod.apply(cromoMejorado);
 		double coste2Opt = ((SolucionTSP) solucionMejorada).getCoste();
-		
+
 		System.out.println("\n=== RESUMEN ===");
 		System.out.println("Coste GA:          " + costeGA);
 		System.out.println("Coste GA + 2-opt:  " + coste2Opt);
 		System.out.println("Mejora con 2-opt:  " + (costeGA - coste2Opt));
-		
+
 		System.out.println("\nSolucion final:");
 		System.out.println(solucionMejorada);
 	}
