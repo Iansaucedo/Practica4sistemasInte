@@ -4,6 +4,78 @@
 
 Se ha implementado la búsqueda local 2-opt como mejora opcional al algoritmo genético para resolver el Problema del Viajante (TSP). La implementación sigue el enfoque Lamarckiano, donde los individuos mejorados sustituyen a los originales en la población.
 
+## Verificación de Conformidad con el Algoritmo 2-opt
+
+La implementación cumple completamente con el algoritmo 2-opt descrito en la literatura científica (Rego & Glover, 2017):
+
+### ✅ **1. Reemplazar dos aristas no adyacentes**
+
+El algoritmo debe reemplazar dos aristas no adyacentes `(vi, vi+1)` y `(vj, vj+1)` por `(vi, vj)` y `(vi+1, vj+1)`.
+
+**Implementación:**
+
+```java
+for (int i = 0; i < mejorRuta.size() - 1; i++) {
+    for (int j = i + 2; j < mejorRuta.size(); j++) {  // j = i + 2 asegura no adyacencia
+```
+
+✅ Correcto: `j = i + 2` garantiza que hay al menos una ciudad entre i y j.
+
+### ✅ **2. Invertir el subpath**
+
+El algoritmo debe invertir el segmento `(vi+1,...,vj)` para mantener la estructura del tour.
+
+**Implementación:**
+
+```java
+invertirSegmento(nuevaRuta, i + 1, j);  // Invierte (vi+1...vj)
+```
+
+✅ Correcto: Invierte exactamente el segmento apropiado.
+
+### ✅ **3. Aceptar solo mejoras (Δij < 0)**
+
+El algoritmo debe calcular el cambio de costo `Δij = c(vi, vj) + c(vi+1, vj+1) − c(vi, vi+1) − c(vj, vj+1)` y aceptar solo si Δij < 0.
+
+**Implementación:**
+
+```java
+if (nuevaDistancia < mejorDistancia) {  // Equivalente a Δij < 0
+    mejorRuta = nuevaRuta;
+    mejora = true;
+}
+```
+
+✅ Correcto: La comparación es matemáticamente equivalente.
+
+### ✅ **4. Iterar hasta 2-optimalidad**
+
+El algoritmo debe continuar hasta que ningún movimiento 2-opt mejore la solución.
+
+**Implementación:**
+
+```java
+do {
+    mejora = false;
+    // ... prueba todos los movimientos ...
+} while (mejora);  // Continúa hasta que no haya mejoras
+```
+
+✅ Correcto: Alcanza un óptimo local (solución 2-opt).
+
+### ✅ **5. Complejidad O(n²)**
+
+Para k=2, la complejidad debe ser O(n²) por iteración.
+
+**Implementación:**
+
+```java
+for (int i ...) {          // O(n)
+    for (int j ...) {      // O(n)
+```
+
+✅ Correcto: Dos bucles anidados = O(n²) por iteración.
+
 ## Archivos Creados
 
 ### 1. `BusquedaLocal2Opt.java` (paquete `tsp`)
