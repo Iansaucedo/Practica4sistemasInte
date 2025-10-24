@@ -54,8 +54,8 @@ public class EstadisticasTSP {
     String archivoProblema = "gr17.tsp.txt";
     int numEjecuciones = 10; // Numero de ejecuciones por algoritmo
     int maxIter = 1000;
-    double pc = 0.9;
-    double pm = 0.4;
+    double pc = 0.1;
+    double pm = 0.9;
     int tamPob = 10000;
 
     System.out.println("=== RECOPILACION DE ESTADISTICAS TSP ===");

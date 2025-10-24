@@ -3,6 +3,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "TesterTSPcon2Opt",
+      "request": "launch",
+      "mainClass": "tsp.TesterTSPcon2Opt",
+      "projectName": "2025p4"
+    },
+    {
+      "type": "java",
+      "name": "EstadisticasTSP",
+      "request": "launch",
+      "mainClass": "tsp.EstadisticasTSP",
+      "projectName": "2025p4"
+    },
+    {
+      "type": "java",
       "name": "TesterTSP",
       "request": "launch",
       "mainClass": "tsp.TesterTSP",

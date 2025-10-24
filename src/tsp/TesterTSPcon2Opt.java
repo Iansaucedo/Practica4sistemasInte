@@ -17,14 +17,22 @@ public class TesterTSPcon2Opt {
     // Instancia compartida de busqueda local 2-opt
     BusquedaLocal2Opt busqueda2Opt = new BusquedaLocal2Opt(prob);
 
-    // ESTRATEGIA: NO aplicar 2-opt durante el GA, solo al final al mejor individuo
-    // Esto permite que el GA explore libremente sin convergencia prematura
+    // ESTRATEGIA: Aplicar 2-opt solo a ALGUNOS individuos para mantener diversidad
+    // - Generación inicial: 10% de probabilidad (mantener diversidad)
+    // - Después de cruce: NO aplicar (dejar que el GA explore)
+    // - Después de mutación: NO aplicar (dejar que el GA explore)
+    double prob2OptGen = 0.1; // 10% en generación inicial
+    double prob2OptCruce = 0.0; // 0% después de cruce
+    double prob2OptMut = 0.0; // 0% después de mutación
 
-    // OPERADORES SIN 2-OPT (dejar que el GA explore primero)
-    OpGeneracion<Integer> opGen = new OpGenRandNoRep<>(
+    // OPERADORES CON 2-OPT
+    OpGeneracion<Integer> opGen = new OpGenRandNoRepCon2Opt<>(
         prob.getAlfabeto(),
-        prob.getNumCiudades());
+        prob.getNumCiudades(),
+        busqueda2Opt,
+        prob2OptGen);
 
+    // Usar operadores normales para cruce y mutación
     OpCruce<Integer> opCruce = new OpCruce1PuntoNoRep<>();
     OpMutacion<Integer> opMut = new OpMutacionSwap<>();
 
@@ -39,8 +47,8 @@ public class TesterTSPcon2Opt {
 
     // PARAMETROS
     int maxIter = 1000; // criterio de parada
-    double pc = 0.9; // prob cruce (ALTA para explorar)
-    double pm = 0.1; // prob mutacion (BAJA para no destruir buenas soluciones)
+    double pc = 0.1; // prob cruce
+    double pm = 0.9; // prob mutacion
     int tamPob = 10000; // tamanio poblacion
 
     System.out.println("Ejecutando GA con busqueda local 2-opt...");
@@ -55,25 +63,9 @@ public class TesterTSPcon2Opt {
         tamPob);
 
     Individuo<Integer> cromoSol = ga.lanzaGA(opGen, maxIter, opCruce, opMut, opSel, opDecod, opReemp);
+    Solucion solucion = opDecod.apply(cromoSol);
 
-    System.out.println("\n=== SOLUCION ENCONTRADA POR EL GA ===");
-    Solucion solucionGA = opDecod.apply(cromoSol);
-    double costeGA = ((SolucionTSP) solucionGA).getCoste();
-    System.out.println(solucionGA);
-    System.out.println("Coste GA: " + costeGA);
-
-    // AHORA aplicar 2-opt para mejorar localmente la mejor solucion del GA
-    System.out.println("\n=== APLICANDO MEJORA LOCAL 2-OPT ===");
-    Individuo<Integer> cromoMejorado = busqueda2Opt.mejorar(cromoSol);
-    Solucion solucionMejorada = opDecod.apply(cromoMejorado);
-    double coste2Opt = ((SolucionTSP) solucionMejorada).getCoste();
-
-    System.out.println("\n=== RESUMEN ===");
-    System.out.println("Coste GA:          " + costeGA);
-    System.out.println("Coste GA + 2-opt:  " + coste2Opt);
-    System.out.println("Mejora con 2-opt:  " + (costeGA - coste2Opt));
-
-    System.out.println("\nSolucion final:");
-    System.out.println(solucionMejorada);
+    System.out.println("Solucion final: \n" + solucion);
+    System.out.println("Coste: " + ((SolucionTSP) solucion).getCoste());
   }
 }
