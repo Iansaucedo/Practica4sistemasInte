@@ -138,10 +138,9 @@ public class EstadisticasTSP {
 
     long inicioTiempo = System.currentTimeMillis();
 
-    // OPERADORES CON 2-OPT (prob=0.3 para mantener diversidad)
-    BusquedaLocal2Opt busqueda2Opt = new BusquedaLocal2Opt(prob);
-    OpGeneracion<Integer> opGen = new OpGenRandNoRepCon2Opt<>(
-        prob.getAlfabeto(), prob.getNumCiudades(), busqueda2Opt, 0.3); // CAMBIADO: prob=0.3
+    // ESTRATEGIA: NO aplicar 2-opt durante el GA, solo al final
+    // Usar los MISMOS operadores que el GA sin 2-opt
+    OpGeneracion<Integer> opGen = new OpGenRandNoRep<>(prob.getAlfabeto(), prob.getNumCiudades());
     OpCruce<Integer> opCruce = new OpCruce1PuntoNoRep<>();
     OpMutacion<Integer> opMut = new OpMutacionSwap<>();
     OpSeleccion<Integer> opSel = new OpSelRandom<>();
@@ -153,7 +152,11 @@ public class EstadisticasTSP {
         prob.getNumCiudades(), prob.getAlfabeto(), pc, pm, tamPob);
 
     Individuo<Integer> cromoSol = ga.lanzaGA(opGen, maxIter, opCruce, opMut, opSel, opDecod, opReemp);
-    Solucion solucion = opDecod.apply(cromoSol);
+
+    // APLICAR 2-OPT SOLO AL FINAL, a la mejor solucion encontrada
+    BusquedaLocal2Opt busqueda2Opt = new BusquedaLocal2Opt(prob);
+    Individuo<Integer> cromoMejorado = busqueda2Opt.mejorar(cromoSol);
+    Solucion solucion = opDecod.apply(cromoMejorado);
 
     long finTiempo = System.currentTimeMillis();
     long tiempoTotal = finTiempo - inicioTiempo;
